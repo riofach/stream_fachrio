@@ -222,3 +222,72 @@ stream
 - Jika terjadi error, maka nilai -1 akan dikirim dan UI juga akan diperbarui menjadi -1.
 
 ![1](./images/P38.gif)
+
+## Penjelasan Maksud Kode Subscription, onDone, dan addRandomNumber dengan Pengecekan Controller di main.dart (P4: Jawaban Soal 9)
+
+### Kode listen dengan subscription dan onDone:
+
+```dart
+numberStream = NumberStream();
+numberStreamController = numberStream.controller;
+Stream stream = numberStreamController.stream;
+
+subscription = stream.listen(
+  (event) {
+    setState(() {
+      lastNumber = event;
+    });
+  },
+  onError: (error) {
+    setState(() {
+      lastNumber = -1;
+    });
+  },
+  onDone: () {
+    print('onDone was called');
+  },
+);
+```
+
+**Penjelasan:**
+
+- Membuat listener (subscription) pada stream untuk menerima data baru, error, dan notifikasi ketika stream selesai (done).
+- Setiap data baru akan memperbarui nilai `lastNumber` di UI.
+- Jika terjadi error, nilai `lastNumber` di-set ke -1.
+- Jika stream selesai (misal controller ditutup), fungsi `onDone` akan dipanggil dan menampilkan pesan di konsol.
+
+### Kode cancel subscription:
+
+```dart
+subscription.cancel();
+```
+
+**Penjelasan:**
+
+- Digunakan untuk membatalkan (menghentikan) langganan pada stream, sehingga tidak akan menerima data baru lagi dari stream.
+
+### Kode addRandomNumber dengan pengecekan controller:
+
+```dart
+void addRandomNumber() {
+  Random random = Random();
+  int myNum = random.nextInt(10);
+  if (!numberStreamController.isClosed) {
+    numberStream.addNumberToSink(myNum);
+  } else {
+    setState(() {
+      lastNumber = -1;
+    });
+  }
+}
+```
+
+**Penjelasan:**
+
+- Membuat angka acak antara 0 sampai 9.
+- Mengecek apakah stream controller masih terbuka.
+- Jika masih terbuka, angka acak dikirim ke stream.
+- Jika sudah ditutup, maka nilai `lastNumber` di-set ke -1 untuk menandakan error atau stream sudah tidak aktif.
+
+![1](./images/P49.gif)
+![2](./images/P491.png)
