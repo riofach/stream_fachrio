@@ -28,6 +28,7 @@ class StreamHomePage extends StatefulWidget {
 }
 
 class _StreamHomePageState extends State<StreamHomePage> {
+  late StreamTransformer transformer;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +44,7 @@ class _StreamHomePageState extends State<StreamHomePage> {
             Text(lastNumber.toString()),
             ElevatedButton(
               onPressed: () => addRandomNumber(),
-              child: const Text('Add Random Number'),
+              child: const Text('New Random Number'),
             ),
           ],
         ),
@@ -75,7 +76,30 @@ class _StreamHomePageState extends State<StreamHomePage> {
     numberStream = NumberStream();
     numberStreamController = numberStream.controller;
     Stream stream = numberStreamController.stream;
+    // stream
+    //     .listen((event) {
+    //       setState(() {
+    //         lastNumber = event;
+    //       });
+    //     })
+    //     .onError((error) {
+    //       setState(() {
+    //         lastNumber = -1;
+    //       });
+    //     });
+
+    transformer = StreamTransformer<int, int>.fromHandlers(
+      handleData: (value, sink) {
+        sink.add(value * 10);
+      },
+      handleError: (error, trace, sink) {
+        sink.add(-1);
+      },
+      handleDone: (sink) => sink.close(),
+    );
+
     stream
+        .transform(transformer)
         .listen((event) {
           setState(() {
             lastNumber = event;
@@ -86,6 +110,7 @@ class _StreamHomePageState extends State<StreamHomePage> {
             lastNumber = -1;
           });
         });
+
     super.initState();
   }
 

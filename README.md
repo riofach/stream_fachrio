@@ -164,3 +164,61 @@ void addRandomNumber() {
 
 - Pada kode ini, fungsi `addRandomNumber` tidak lagi mengirimkan angka acak ke stream, melainkan memanggil fungsi `addError`.
 - Artinya, setiap kali tombol ditekan, stream akan mengirimkan error, sehingga blok `onError` pada listener akan dijalankan dan nilai `lastNumber` di UI akan berubah menjadi -1.
+
+## Penjelasan Maksud Kode StreamTransformer dan Transformasi Stream di main.dart (P3: Jawaban Soal 8)
+
+### Deklarasi transformer:
+
+```dart
+late StreamTransformer transformer;
+```
+
+**Penjelasan:**
+
+- Mendeklarasikan variabel bertipe `StreamTransformer` yang akan digunakan untuk mentransformasi data pada stream.
+
+### Inisialisasi transformer:
+
+```dart
+transformer = StreamTransformer<int, int>.fromHandlers(
+  handleData: (value, sink) {
+    sink.add(value * 10);
+  },
+  handleError: (error, trace, sink) {
+    sink.add(-1);
+  },
+  handleDone: (sink) => sink.close(),
+);
+```
+
+**Penjelasan:**
+
+- Membuat objek `StreamTransformer` yang akan mengubah setiap data bertipe `int` yang masuk ke stream.
+- Pada `handleData`, setiap data yang masuk akan dikalikan 10 sebelum diteruskan ke stream berikutnya.
+- Pada `handleError`, jika terjadi error, maka nilai -1 akan dikirim ke stream.
+- Pada `handleDone`, stream akan ditutup jika sudah selesai.
+
+### Penggunaan transformasi pada stream:
+
+```dart
+stream
+    .transform(transformer)
+    .listen((event) {
+      setState(() {
+        lastNumber = event;
+      });
+    })
+    .onError((error) {
+      setState(() {
+        lastNumber = -1;
+      });
+    });
+```
+
+**Penjelasan:**
+
+- Stream dari `numberStreamController` akan diproses terlebih dahulu oleh `transformer` sebelum didengarkan oleh listener.
+- Setiap data yang masuk akan dikalikan 10, lalu hasilnya akan diterima oleh listener dan digunakan untuk memperbarui nilai `lastNumber` di UI.
+- Jika terjadi error, maka nilai -1 akan dikirim dan UI juga akan diperbarui menjadi -1.
+
+![1](./images/P38.gif)
