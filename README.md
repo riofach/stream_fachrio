@@ -74,3 +74,44 @@ colorStream.getColors().listen((eventColor) {
   });
 });
 ```
+
+## Penjelasan Maksud Kode pada `listen` dan `addRandomNumber` di main.dart (P2: Jawaban Soal 6)
+
+### Kode listen pada stream:
+
+```dart
+numberStream = NumberStream();
+numberStreamController = numberStream.controller;
+Stream stream = numberStreamController.stream;
+stream.listen((event) {
+  setState(() {
+    lastNumber = event;
+  });
+});
+```
+
+**Penjelasan:**
+
+- Membuat objek `NumberStream` dan mengambil `controller`-nya.
+- Mengambil stream dari controller.
+- Menggunakan `listen` untuk mendengarkan setiap data (event) baru yang masuk ke stream.
+- Setiap kali ada data baru, fungsi callback di dalam `listen` akan dijalankan, yang akan memanggil `setState` untuk memperbarui nilai `lastNumber` di UI dengan data terbaru dari stream.
+
+### Kode addRandomNumber:
+
+```dart
+void addRandomNumber() {
+  Random random = Random();
+  int myNum = random.nextInt(10);
+  numberStream.addNumberToSink(myNum);
+}
+```
+
+**Penjelasan:**
+
+- Membuat objek `Random` untuk menghasilkan angka acak.
+- Mengambil angka acak antara 0 sampai 9.
+- Mengirimkan angka acak tersebut ke stream melalui fungsi `addNumberToSink` milik objek `NumberStream`.
+- Angka ini kemudian akan diterima oleh listener stream (kode sebelumnya), sehingga nilai `lastNumber` di UI akan diperbarui secara otomatis.
+
+![1](./images/P26.gif)
