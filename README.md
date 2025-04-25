@@ -291,3 +291,37 @@ void addRandomNumber() {
 
 ![1](./images/P49.gif)
 ![2](./images/P491.png)
+
+## Penjelasan Error: Bad state: Stream has already been listened to. (P5: Jawaban Soal 10)
+
+### Penyebab Error
+
+Error ini terjadi karena pada stream bertipe single-subscription (default pada StreamController di Dart), sebuah stream hanya boleh didengarkan (listen) oleh satu listener saja pada satu waktu. Jika kita mencoba untuk memanggil listen lebih dari sekali pada stream yang sama, maka akan muncul error:
+
+```
+Bad state: Stream has already been listened to.
+```
+
+## Penjelasan Mengapa Angka Bertambah Dua Kali Setiap Tombol Ditekan (P5: Jawaban Soal 11)
+
+### Penyebab
+
+Pada kode di main.dart, terdapat dua subscription (pendengar) pada stream yang sama:
+
+```dart
+subscription = stream.listen((event) {
+  setState(() {
+    values += '$event - ';
+  });
+});
+
+subscription2 = stream.listen((event) {
+  setState(() {
+    values += '$event - ';
+  });
+});
+```
+
+Setiap kali ada data baru masuk ke stream (misal dari addRandomNumber), kedua subscription ini akan menerima data yang sama dan menjalankan callback masing-masing. Akibatnya, setiap angka yang masuk akan ditambahkan ke variabel `values` sebanyak dua kali, sehingga teks angka di UI bertambah dua kali lipat setiap tombol ditekan.
+
+![1](./images/P511.gif)
