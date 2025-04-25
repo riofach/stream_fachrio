@@ -35,3 +35,7 @@ Keyword `yield*` digunakan untuk meneruskan (menyebarkan) seluruh nilai yang dih
 ### Maksud isi perintah kode
 
 Kode tersebut membuat sebuah stream yang setiap 1 detik akan mengeluarkan (emit) satu warna dari daftar `_colors`. Warna yang dikeluarkan akan berurutan sesuai urutan pada list, dan akan mengulang dari awal jika sudah sampai di akhir list (menggunakan operasi modulus). Dengan demikian, stream ini dapat digunakan untuk menampilkan warna yang berubah-ubah setiap detik secara otomatis.
+
+## Hasil Praktikum (P1: Jawaban Soal 4)
+
+![1](./images/P14.gif)
