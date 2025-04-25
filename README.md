@@ -39,3 +39,38 @@ Kode tersebut membuat sebuah stream yang setiap 1 detik akan mengeluarkan (emit)
 ## Hasil Praktikum (P1: Jawaban Soal 4)
 
 ![1](./images/P14.gif)
+
+## Perbedaan Menggunakan `listen` dan `await for` pada Stream (P1: Jawaban Soal 5)
+
+Pada kode di `main.dart`, digunakan:
+
+```dart
+void changeColor() async {
+  await for (var eventColor in colorStream.getColors()) {
+    setState(() {
+      bgColor = eventColor;
+    });
+  }
+}
+```
+
+### Penjelasan:
+
+- **`await for`** digunakan di dalam fungsi async untuk menerima data dari stream satu per satu secara sinkron (menunggu setiap data datang sebelum melanjutkan ke data berikutnya). Cocok digunakan jika ingin memproses setiap data secara berurutan dan menunggu proses selesai sebelum melanjutkan.
+- **`listen`** adalah metode pada stream yang menerima callback (fungsi) yang akan dipanggil setiap kali ada data baru. Dengan `listen`, kita tidak perlu menunggu data berikutnya, sehingga lebih cocok untuk kasus di mana kita ingin merespons setiap data secara reaktif tanpa menunggu proses sebelumnya selesai.
+
+### Perbedaan Utama:
+
+- `await for` hanya bisa digunakan di dalam fungsi async dan akan menunggu setiap data stream secara berurutan.
+- `listen` bisa digunakan di mana saja dan memberikan lebih banyak kontrol, seperti pause, resume, dan cancel subscription.
+- Dengan `await for`, eksekusi fungsi akan "tertahan" di loop sampai stream selesai, sedangkan dengan `listen`, eksekusi fungsi tetap berjalan dan callback akan dipanggil setiap ada data baru.
+
+### Contoh Penggunaan `listen`:
+
+```dart
+colorStream.getColors().listen((eventColor) {
+  setState(() {
+    bgColor = eventColor;
+  });
+});
+```
