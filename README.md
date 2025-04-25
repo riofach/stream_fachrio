@@ -115,3 +115,52 @@ void addRandomNumber() {
 - Angka ini kemudian akan diterima oleh listener stream (kode sebelumnya), sehingga nilai `lastNumber` di UI akan diperbarui secara otomatis.
 
 ![1](./images/P26.gif)
+
+## Penjelasan Maksud Kode Error Handling pada Stream (P2: Jawaban Soal 7)
+
+### Kode addError di stream.dart:
+
+```dart
+addError() {
+  controller.sink.addError('Error');
+}
+```
+
+**Penjelasan:**
+
+- Fungsi ini digunakan untuk menambahkan error ke dalam stream. Ketika fungsi ini dipanggil, stream akan mengirimkan event error dengan pesan 'Error' ke semua listener-nya.
+
+### Kode onError pada listen di main.dart:
+
+```dart
+stream.listen((event) {
+  setState(() {
+    lastNumber = event;
+  });
+}).onError((error) {
+  setState(() {
+    lastNumber = -1;
+  });
+});
+```
+
+**Penjelasan:**
+
+- Ketika stream menerima event error, blok `onError` akan dijalankan.
+- Pada kasus ini, jika terjadi error pada stream, maka nilai `lastNumber` akan di-set menjadi -1, sehingga UI dapat menampilkan bahwa terjadi error.
+
+### Kode addRandomNumber yang memanggil addError:
+
+```dart
+void addRandomNumber() {
+  Random random = Random();
+  // int myNum = random.nextInt(10);
+  // numberStream.addNumberToSink(myNum);
+  numberStream.addError();
+}
+```
+
+**Penjelasan:**
+
+- Pada kode ini, fungsi `addRandomNumber` tidak lagi mengirimkan angka acak ke stream, melainkan memanggil fungsi `addError`.
+- Artinya, setiap kali tombol ditekan, stream akan mengirimkan error, sehingga blok `onError` pada listener akan dijalankan dan nilai `lastNumber` di UI akan berubah menjadi -1.
